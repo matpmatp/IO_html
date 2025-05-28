@@ -1,66 +1,32 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Panel Pracownika Akademika</title>
-  <style>
-    body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; }
-    header { background-color: #007bff; color: white; padding: 20px; text-align: center; }
-    nav { background: #343a40; padding: 15px; display: flex; flex-wrap: wrap; justify-content: center; }
-    nav a {
-      color: white;
-      margin: 10px;
-      text-decoration: none;
-      background: #495057;
-      padding: 10px 15px;
-      border-radius: 5px;
-    }
-    nav a:hover { background: #6c757d; }
-    .content { padding: 30px; text-align: center; }
-    .tile {
-      background: white;
-      padding: 30px;
-      margin: 15px;
-      display: inline-block;
-      width: 250px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    }
-    .tile h3 { margin-top: 0; }
-  </style>
+  <meta charset="UTF-8" />
+  <title>Panel główny - E-kademik</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>Panel Pracownika Akademika</h1>
+    <h1>System Zarządzania Akademikiem</h1>
   </header>
+
   <nav>
-    <a href="#">Rejestracja Studenta</a>
-    <a href="#">Zgłoszenie Usterki</a>
-    <a href="#">Dodanie Opłaty</a>
-    <a href="#">Dodanie Wniosku</a>
-    <a href="#">Raporty</a>
+    <ul>
+      <li><a href="dodaj_wniosek.html">Dodaj wniosek</a></li>
+      <li><a href="dodaj_oplate.html">Dodaj opłatę</a></li>
+      <li><a href="generuj_raport.html">Generuj raport</a></li>
+      <li><a href="rejestracja.html">Rejestracja mieszkańca</a></li>
+      <li><a href="usterki.html">Zgłoś usterkę</a></li>
+      <li><a href="komunikaty.html">Komunikaty</a></li>
+      <li><a href="login.html" id="logoutBtn">Wyloguj</a></li>
+    </ul>
   </nav>
-  <div class="content">
-    <div class="tile">
-      <h3>Rejestracja Studenta</h3>
-      <p>Dodaj nowego studenta do systemu.</p>
-    </div>
-    <div class="tile">
-      <h3>Zgłoszenie Usterki</h3>
-      <p>Zarejestruj usterkę w pokoju studenckim.</p>
-    </div>
-    <div class="tile">
-      <h3>Dodanie Opłaty</h3>
-      <p>Wprowadź nową opłatę dla studenta.</p>
-    </div>
-    <div class="tile">
-      <h3>Dodanie Wniosku</h3>
-      <p>Dodaj nowy wniosek administracyjny.</p>
-    </div>
-    <div class="tile">
-      <h3>Generowanie Raportów</h3>
-      <p>Wybierz i wygeneruj raport dla administracji.</p>
-    </div>
-  </div>
+
+  <main>
+    <p id="sessionInfo"></p>
+    <p>Witaj w panelu głównym E-kademik.</p>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
