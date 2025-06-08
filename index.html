@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>E-kademik - Strona Główna</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Witamy w E-kademiku</h1>
+  </header>
+
+<nav>
+  <ul>
+    <li><a href="index.html">Strona Główna</a></li>
+    <li><a href="galeria.html">Galeria</a></li>
+    <li><a href="kontakt.html">Kontakt</a></li>
+    <li><a href="regulamin.html">Regulamin</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <section>
+      <h2>O akademiku</h2>
+      <p>
+        Nasz akademik oferuje komfortowe warunki, całodobową recepcję i bogate zaplecze rekreacyjne.
+      </p>
+    </section>
+
+    <br>
+    <h2>Lokalizacja</h2>
+    <section id="map-container" style="margin-top: 20px; height: 400px; position: relative;">
+    <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d503.52291339248144!2d14.53518031571417!3d53.4527080796744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47aa09551740ee2f%3A0x328ea04533729316!2sDom%20Studencki%20%E2%80%9EAMICUS%E2%80%9D!5e0!3m2!1spl!2spl!4v1686288500000!5m2!1spl!2spl"
+        width="100%" height="100%" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <button id="zoomBtn" style="position: absolute; top: 10px; right: 10px;">Powiększ mapę</button>
+    </section>
+
+
+    <div id="loginContainer" style="margin-top: 30px;">
+      <button class="btn-login" onclick="window.location.href='login.html'">Logowanie</button>
+    </div>
+
+    <div id="userInfo" style="display: none; margin-top: 30px;">
+      <p id="sessionInfo" style="font-style: italic; color: #ffd966; font-weight: 600; text-shadow: 0 0 6px #ffd966aa;"></p>
+      <button class="btn-login" onclick="window.location.href='dashboard.html'">Przejdź do panelu</button>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
