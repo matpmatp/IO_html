@@ -2,17 +2,17 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <title>Dodaj wniosek - E-kademik</title>
+  <title>Zgłoś usterkę - E-kademik</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>System Zarządzania Akademikiem</h1>
-  </header>
+  <header><a href="dashboard.html">← Powrót</a></header>
+  <h2>Zgłoszenie usterki</h2>
 
   <nav>
     <ul>
       <li><a href="dashboard.html">Panel główny</a></li>
+      <li><a href="dodaj_wniosek.html">Dodaj wniosek</a></li>
       <li><a href="dodaj_oplate.html">Dodaj opłatę</a></li>
       <li><a href="generuj_raport.html">Generuj raport</a></li>
       <li><a href="rejestracja.html">Rejestracja mieszkańca</a></li>
@@ -25,14 +25,12 @@
   <main>
     <p id="sessionInfo"></p>
 
-    <h2>Dodaj wniosek</h2>
     <form>
-      <label>Imię i nazwisko: <input type="text" required /></label><br>
-      <label>Uczelnia: <input type="text" required /></label><br>
-      <label>Wybrany akademik: <input type="text" required /></label><br>
-      <label>Data od: <input type="date" required /></label><br>
-      <label>Data do: <input type="date" required /></label><br>
-      <button type="submit">Złóż wniosek</button>
+      <label>Opis usterki:<br>
+        <textarea required></textarea>
+      </label><br>
+      <label>Dodaj zdjęcie (opcjonalnie): <input type="file" /></label><br>
+      <button type="submit">Wyślij zgłoszenie</button>
     </form>
   </main>
 

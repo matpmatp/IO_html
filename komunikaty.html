@@ -2,17 +2,16 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <title>Dodaj wniosek - E-kademik</title>
+  <title>Komunikaty - E-kademik</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>System Zarządzania Akademikiem</h1>
-  </header>
+  <header><h1>Komunikaty</h1></header>
 
   <nav>
     <ul>
       <li><a href="dashboard.html">Panel główny</a></li>
+      <li><a href="dodaj_wniosek.html">Dodaj wniosek</a></li>
       <li><a href="dodaj_oplate.html">Dodaj opłatę</a></li>
       <li><a href="generuj_raport.html">Generuj raport</a></li>
       <li><a href="rejestracja.html">Rejestracja mieszkańca</a></li>
@@ -25,14 +24,18 @@
   <main>
     <p id="sessionInfo"></p>
 
-    <h2>Dodaj wniosek</h2>
     <form>
-      <label>Imię i nazwisko: <input type="text" required /></label><br>
-      <label>Uczelnia: <input type="text" required /></label><br>
-      <label>Wybrany akademik: <input type="text" required /></label><br>
-      <label>Data od: <input type="date" required /></label><br>
-      <label>Data do: <input type="date" required /></label><br>
-      <button type="submit">Złóż wniosek</button>
+      <label>Treść ogłoszenia:<br>
+        <textarea required></textarea>
+      </label><br>
+      <label>Grupa odbiorców:
+        <select>
+          <option>Wszyscy mieszkańcy</option>
+          <option>Budynek A</option>
+          <option>Budynek B</option>
+        </select>
+      </label><br>
+      <button type="submit">Wyślij</button>
     </form>
   </main>
 

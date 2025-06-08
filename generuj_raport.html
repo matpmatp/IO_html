@@ -1,34 +1,44 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Generuj Raport</title>
-  <style>
-    body { font-family: sans-serif; background: #eef2f3; padding: 40px; }
-    .form-box { background: white; padding: 25px; max-width: 500px; margin: auto; border-radius: 6px; box-shadow: 0 0 6px rgba(0,0,0,0.1); }
-    h2 { text-align: center; }
-    label, select { width: 100%; margin: 10px 0; }
-    button { background: #17a2b8; color: white; padding: 10px; border: none; border-radius: 4px; width: 100%; }
-  </style>
+  <meta charset="UTF-8" />
+  <title>Generuj raport - E-kademik</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="form-box">
-    <h2>Generowanie Raportu</h2>
-    <label>Rodzaj raportu</label>
-    <select>
-      <option>Raport Finansowy</option>
-      <option>Raport Zamieszkania</option>
-      <option>Raport Szkód</option>
-      <option>Raport Konserwacyjny</option>
-    </select>
-    <label>Okres</label>
-    <select>
-      <option>miesiąc</option>
-      <option>semestr</option>
-      <option>półRoku</option>
-      <option>rok</option>
-    </select>
-    <button>Generuj</button>
-  </div>
+  <header>
+    <h1>System Zarządzania Akademikiem</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="dashboard.html">Panel główny</a></li>
+      <li><a href="dodaj_wniosek.html">Dodaj wniosek</a></li>
+      <li><a href="dodaj_oplate.html">Dodaj opłatę</a></li>
+      <li><a href="rejestracja.html">Rejestracja mieszkańca</a></li>
+      <li><a href="usterki.html">Zgłoś usterkę</a></li>
+      <li><a href="komunikaty.html">Komunikaty</a></li>
+      <li><a href="login.html" id="logoutBtn">Wyloguj</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <p id="sessionInfo"></p>
+
+    <h2>Generuj raport</h2>
+    <form>
+      <label>Typ raportu:
+        <select>
+          <option>Opłaty</option>
+          <option>Usterki</option>
+          <option>Zmiany mieszkańców</option>
+        </select>
+      </label><br>
+      <label>Zakres czasowy: <input type="month" /></label><br>
+      <button type="submit">Generuj PDF</button>
+    </form>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
