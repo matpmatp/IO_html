@@ -157,6 +157,7 @@ async function handleAktualizujWniosek(e) {
 async function pobierzIWyswietlWnioski() {
     const listaWnioskow = document.getElementById('listaWnioskow');
     if (!listaWnioskow) return;
+
     listaWnioskow.innerHTML = '<option>Ładowanie...</option>';
     try {
         const response = await fetch('api/pobierz_wnioski.php');
@@ -168,8 +169,21 @@ async function pobierzIWyswietlWnioski() {
             wnioski.forEach(wniosek => {
                 const opcja = document.createElement('option');
                 opcja.value = wniosek.Id_wniosku;
-                let statusText = wniosek.Przyjety ? 'Przyjęty' : 'Przetwarzany';
+
+                // NOWA, POPRAWIONA LOGIKA USTALANIA STATUSU
+                let statusText = 'Nieokreślony';
+                if (wniosek.Przyjety == 1) {
+                    statusText = 'Przyjęty';
+                } else if (wniosek.Odrzucony == 1) {
+                    statusText = 'Odrzucony';
+                } else if (wniosek.Wstrzymany == 1) {
+                    statusText = 'Wstrzymany';
+                } else if (wniosek.Przetwarzany == 1) {
+                    statusText = 'Przetwarzany';
+                }
+
                 opcja.textContent = `Wniosek #${wniosek.Id_wniosku} - ${wniosek.Typ} (Status: ${statusText})`;
+
                 listaWnioskow.appendChild(opcja);
             });
         } else {

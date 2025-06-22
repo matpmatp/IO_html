@@ -1,28 +1,21 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-// api/pobierz_wnioski.php -- WERSJA POPRAWIONA
-
-// Po rozwiązaniu problemu, usuń te dwie linie, aby nie pokazywać błędów na produkcji!
+// Plik: api/pobierz_wnioski.php -- WERSJA POPRAWIONA
 
 require_once 'db_connect.php';
-
 header('Content-Type: application/json');
 
 $wnioski = [];
 
-// NOWE, POPRAWIONE ZAPYTANIE SQL Z UŻYCIEM LEFT JOIN
-// Łączymy tabelę Wniosek (alias 'w') z tabelą StatusWniosku (alias 'sw')
-// warunkiem połączenia jest zgodność Id_wniosku w obu tabelach.
+// ZAPYTANIE SQL POBIERA TERAZ WSZYSTKIE FLAGI STATUSU
 $sql = "
     SELECT
         w.Id_wniosku,
         w.Typ,
         w.DataZlozenia,
-        sw.Przetwarzany,
         sw.Przyjety,
         sw.Odrzucony,
-        sw.Wstrzymany
+        sw.Wstrzymany,
+        sw.Przetwarzany
     FROM
         Wniosek AS w
     LEFT JOIN
