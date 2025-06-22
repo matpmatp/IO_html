@@ -126,6 +126,7 @@ const wniosekForm = document.getElementById('wniosekForm');
 
 if (wniosekForm) {
   wniosekForm.addEventListener('submit', async (e) => {
+    console.log('Formularz został wysłany, funkcja wystartowała!');
     e.preventDefault();
 
     const formData = {
