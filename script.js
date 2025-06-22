@@ -145,32 +145,48 @@ if (listaOplatContainer) {
 }
 
 
+//======================================================================
+// === WKLEJ TEN BLOK DO SWOJEGO ISTNIEJĄCEGO SCRIPT.JS ===
+//======================================================================
+
   const usterkaForm = document.getElementById('usterkaForm');
-if (usterkaForm) {
-    usterkaForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const formData = {
-            nrPokoju: document.getElementById('usterkaNrPokoju').value,
-            opis: document.getElementById('usterkaOpis').value,
-        };
+  if (usterkaForm) {
+      console.log('Znaleziono formularz usterek, dołączam listener.');
 
-        try {
-            const response = await fetch('api/dodaj_usterke.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.message);
+      usterkaForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          console.log('Formularz usterki wysłany, funkcja startuje!');
 
-            alert('Sukces! ' + result.message);
-            usterkaForm.reset();
-            pobierzIWyswietlUsterki(); // Odśwież listę
-        } catch (error) {
-            alert('Błąd: ' + error.message);
-        }
-    });
-}
+          const formData = {
+              nrPokoju: document.getElementById('usterkaNrPokoju').value,
+              opis: document.getElementById('usterkaOpis').value,
+          };
+
+          try {
+              const response = await fetch('api/dodaj_usterke.php', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(formData)
+              });
+
+              const result = await response.json();
+              if (!response.ok) {
+                  // Jeśli serwer zwrócił błąd, rzucamy go, aby go złapać w catch
+                  throw new Error(result.message || 'Nieznany błąd serwera');
+              }
+
+              alert('Sukces! ' + result.message);
+              usterkaForm.reset();
+              pobierzIWyswietlUsterki();
+              // Jeśli masz funkcję do odświeżania listy, wywołaj ją tutaj, np.
+              // pobierzIWyswietlUsterki();
+
+          } catch (error) {
+              console.error('Błąd podczas dodawania usterki:', error);
+              alert('Wystąpił błąd: ' + error.message);
+          }
+      });
+  }
 
 // --- OBSŁUGA WYŚWIETLANIA I USUWANIA USTEREK ---
 const listaUsterekContainer = document.getElementById('listaUsterekContainer');
