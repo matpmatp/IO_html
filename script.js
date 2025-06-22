@@ -230,6 +230,7 @@ if (usterkaEditModal) {
     const closeBtn = document.getElementById('closeUsterkaModalBtn');
     const editForm = document.getElementById('usterkaEditForm');
 
+    // Logika zamykania okna
     closeBtn.onclick = () => { usterkaEditModal.style.display = 'none'; };
     window.onclick = (event) => {
         if (event.target == usterkaEditModal) {
@@ -237,6 +238,7 @@ if (usterkaEditModal) {
         }
     };
 
+    // Podpięcie funkcji do formularza edycji
     if (editForm) {
         editForm.addEventListener('submit', handleAktualizujUsterke);
     }
@@ -502,17 +504,24 @@ async function pobierzIWyswietlUsterki() {
       }
   }
 
-
-  async function openUsterkaEditModal(id) {
+/**
+ * Otwiera okno modalne i wypełnia je danymi konkretnej usterki.
+ * @param {number} id - ID usterki do edycji.
+ */
+async function openUsterkaEditModal(id) {
     const modal = document.getElementById('usterkaEditModal');
-    if (!modal) return;
+    if (!modal) {
+        console.error('Nie znaleziono okna modalnego o ID: usterkaEditModal');
+        return;
+    }
 
     try {
+        // Pobierz dane jednej usterki z serwera
         const response = await fetch(`api/pobierz_jedna_usterke.php?id=${id}`);
         const dane = await response.json();
         if (!response.ok) throw new Error(dane.message);
 
-        // Wypełnij formularz w modalu
+        // Wypełnij formularz w oknie modalnym danymi z bazy
         document.getElementById('usterkaEditId').value = dane.Id_usterki;
         document.getElementById('usterkaEditOpis').value = dane.Opis;
 
@@ -521,7 +530,7 @@ async function pobierzIWyswietlUsterki() {
         else if (dane.W_naprawie == 1) aktualnyStatus = 'w_naprawie';
         document.getElementById('usterkaEditStatus').value = aktualnyStatus;
 
-        // Pokaż modal
+        // Pokaż okno modalne
         modal.style.display = 'block';
 
     } catch (error) {
@@ -529,10 +538,14 @@ async function pobierzIWyswietlUsterki() {
     }
 }
 
-// Tę funkcję też dodaj do sekcji z funkcjami pomocniczymi
+/**
+ * Obsługuje wysłanie formularza edycji usterki.
+ * @param {Event} e - Obiekt zdarzenia 'submit'.
+ */
 async function handleAktualizujUsterke(e) {
     e.preventDefault();
     const komunikat = document.getElementById('komunikatEdycjiUsterki');
+    const modal = document.getElementById('usterkaEditModal');
 
     const formData = {
         idUsterki: document.getElementById('usterkaEditId').value,
@@ -549,8 +562,14 @@ async function handleAktualizujUsterke(e) {
         const result = await response.json();
         if (!response.ok) throw new Error(result.message);
 
+        // Wyświetl komunikat o sukcesie i zamknij okno modalne po 1.5 sekundy
         komunikat.textContent = result.message;
         komunikat.style.color = 'lightgreen';
+        setTimeout(() => {
+            modal.style.display = 'none';
+            komunikat.textContent = ''; // Wyczyść komunikat
+        }, 1500);
+
         pobierzIWyswietlUsterki(); // Odśwież listę w tle
 
     } catch (error) {
