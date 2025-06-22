@@ -27,12 +27,18 @@
     <p id="sessionInfo"></p>
 
     <h2>Dodaj opłatę</h2>
-    <form>
-      <label>Numer albumu: <input type="text" required /></label><br>
-      <label>Kwota: <input type="number" required /></label><br>
-      <label>Opis: <input type="text" /></label><br>
-      <button type="submit">Dodaj opłatę</button>
-    </form>
+<form id="oplatyForm">
+  <label>Numer albumu: <input type="text" id="oplatyNrAlbumu" required /></label><br>
+  <label>Kwota: <input type="number" id="oplatyKwota" step="0.01" required /></label><br>
+  <label>Opis: <input type="text" id="oplatyOpis" /></label><br>
+  <button type="submit">Dodaj opłatę</button>
+</form>
+
+<hr style="margin-top: 40px; margin-bottom: 20px;">
+
+<h2>Zarejestrowane opłaty</h2>
+<div id="listaOplatContainer">
+  </div>
   </main>
 
   <script src="script.js"></script>

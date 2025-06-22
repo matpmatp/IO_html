@@ -66,6 +66,91 @@ document.addEventListener('DOMContentLoaded', () => {
             openEditModal(idWniosku);
         });
     }
+
+
+      //======================================================================
+  // === NOWY KOD DO OBSŁUGI OPŁAT - dodaj do script.js ===
+  //======================================================================
+
+  // --- OBSŁUGA FORMULARZA DODAWANIA OPŁATY ---
+  const oplatForm = document.getElementById('oplatyForm');
+  if (oplatyForm) {
+      oplatyForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const formData = {
+              idStudenta: document.getElementById('oplatyNrAlbumu').value,
+              kwota: document.getElementById('oplatyKwota').value,
+              opis: document.getElementById('oplatyOpis').value,
+          };
+
+          try {
+              const response = await fetch('api/dodaj_oplate.php', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(formData)
+              });
+              const result = await response.json();
+              if (!response.ok) throw new Error(result.message);
+
+              alert('Sukces! ' + result.message);
+              oplatyForm.reset();
+              pobierzIWyswietlOplaty(); // Odśwież listę
+          } catch (error) {
+              alert('Błąd: ' + error.message);
+          }
+      });
+  }
+
+  // --- OBSŁUGA WYŚWIETLANIA LISTY OPŁAT ---
+  const listaOplatContainer = document.getElementById('listaOplatContainer');
+  if (listaOplatContainer) {
+      pobierzIWyswietlOplaty(); // Wywołaj funkcję na starcie
+  }
+
+  async function pobierzIWyswietlOplaty() {
+      if (!listaOplatContainer) return;
+      listaOplatContainer.innerHTML = '<p>Ładowanie listy opłat...</p>';
+      try {
+          const response = await fetch('api/pobierz_oplaty.php');
+          const oplaty = await response.json();
+          if (!response.ok) throw new Error(oplaty.message);
+
+          if (oplaty.length === 0) {
+              listaOplatContainer.innerHTML = '<p>Brak opłat do wyświetlenia.</p>';
+              return;
+          }
+
+          // Tworzymy tabelę do wyświetlenia danych
+          let tableHTML = `<table border="1" style="width:100%; border-collapse: collapse;">
+              <thead>
+                  <tr>
+                      <th>Data</th>
+                      <th>Student</th>
+                      <th>Opis</th>
+                      <th>Kwota</th>
+                  </tr>
+              </thead>
+              <tbody>`;
+
+          oplaty.forEach(oplata => {
+              tableHTML += `
+                  <tr>
+                      <td>${oplata.Data}</td>
+                      <td>${oplata.Imie} ${oplata.Nazwisko}</td>
+                      <td>${oplata.Opis}</td>
+                      <td>${Number(oplata.Wartosc).toFixed(2)} zł</td>
+                  </tr>
+              `;
+          });
+
+          tableHTML += '</tbody></table>';
+          listaOplatContainer.innerHTML = tableHTML;
+
+      } catch (error) {
+          listaOplatContainer.innerHTML = `<p style="color:red;">Błąd ładowania opłat: ${error.message}</p>`;
+      }
+  }
 });
 
 // =====================================================================
