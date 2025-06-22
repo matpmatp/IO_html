@@ -6,12 +6,25 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header><h1>Zgłaszanie Usterek</h1></header>
+  <header><a href="dashboard.html">← Powrót</a></header>
+  <h2>Zgłoszenie usterki</h2>
+
   <nav>
-    <ul><li><a href="dashboard.html">Panel główny</a></li></ul>
+    <ul>
+      <li><a href="index.html">Strona główna</a></li>
+      <li><a href="dodaj_wniosek.html">Dodaj wniosek</a></li>
+      <li><a href="dodaj_oplate.html">Dodaj opłatę</a></li>
+      <li><a href="generuj_raport.html">Generuj raport</a></li>
+      <li><a href="rejestracja.html">Rejestracja mieszkańca</a></li>
+      <li><a href="dashboard.html">Panel główny</a></li>
+      <li><a href="komunikaty.html">Komunikaty</a></li>
+      <li><a href="login.html" id="logoutBtn">Wyloguj</a></li>
+    </ul>
   </nav>
 
   <main>
+    <p id="sessionInfo"></p>
+
     <h2>Zgłoszenie usterki</h2>
     <form id="usterkaForm" method="POST">
       <label>Numer pokoju:</label><br>
