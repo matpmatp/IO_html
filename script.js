@@ -144,57 +144,6 @@ if (listaOplatContainer) {
     });
 }
 
-  // ZASTĄP starą wersję tej funkcji w script.js
-
-  async function pobierzIWyswietlOplaty() {
-      if (!listaOplatContainer) return;
-      listaOplatContainer.innerHTML = '<p>Ładowanie listy opłat...</p>';
-      try {
-          const response = await fetch('api/pobierz_oplaty.php');
-          const oplaty = await response.json();
-          if (!response.ok) throw new Error(oplaty.message);
-
-          if (oplaty.length === 0) {
-              listaOplatContainer.innerHTML = '<p>Brak opłat do wyświetlenia.</p>';
-              return;
-          }
-
-          // Dodajemy nową kolumnę "Akcja" w nagłówku
-          let tableHTML = `<table border="1" style="width:100%; border-collapse: collapse;">
-              <thead>
-                  <tr>
-                      <th>Data</th>
-                      <th>Student</th>
-                      <th>Opis</th>
-                      <th>Kwota</th>
-                      <th>Akcja</th>
-                  </tr>
-              </thead>
-              <tbody>`;
-
-          oplaty.forEach(oplata => {
-              // Dla każdego wiersza dodajemy komórkę z przyciskiem "Usuń"
-              // Używamy atrybutu "data-id", aby przechować ID opłaty w przycisku
-              tableHTML += `
-                  <tr>
-                      <td>${oplata.Data}</td>
-                      <td>${oplata.Imie} ${oplata.Nazwisko}</td>
-                      <td>${oplata.Opis}</td>
-                      <td>${Number(oplata.Wartosc).toFixed(2)} zł</td>
-                      <td>
-                          <button class="przycisk-usun" data-id="${oplata.Id_oplaty}">Usuń</button>
-                      </td>
-                  </tr>
-              `;
-          });
-
-          tableHTML += '</tbody></table>';
-          listaOplatContainer.innerHTML = tableHTML;
-
-      } catch (error) {
-          listaOplatContainer.innerHTML = `<p style="color:red;">Błąd ładowania opłat: ${error.message}</p>`;
-      }
-  }
 
   const usterkaForm = document.getElementById('usterkaForm');
 if (usterkaForm) {
@@ -468,3 +417,54 @@ async function pobierzIWyswietlUsterki() {
         listaUsterekContainer.innerHTML = `<p style="color:red;">Błąd ładowania usterek: ${error.message}</p>`;
     }
 }
+
+
+  async function pobierzIWyswietlOplaty() {
+      if (!listaOplatContainer) return;
+      listaOplatContainer.innerHTML = '<p>Ładowanie listy opłat...</p>';
+      try {
+          const response = await fetch('api/pobierz_oplaty.php');
+          const oplaty = await response.json();
+          if (!response.ok) throw new Error(oplaty.message);
+
+          if (oplaty.length === 0) {
+              listaOplatContainer.innerHTML = '<p>Brak opłat do wyświetlenia.</p>';
+              return;
+          }
+
+          // Dodajemy nową kolumnę "Akcja" w nagłówku
+          let tableHTML = `<table border="1" style="width:100%; border-collapse: collapse;">
+              <thead>
+                  <tr>
+                      <th>Data</th>
+                      <th>Student</th>
+                      <th>Opis</th>
+                      <th>Kwota</th>
+                      <th>Akcja</th>
+                  </tr>
+              </thead>
+              <tbody>`;
+
+          oplaty.forEach(oplata => {
+              // Dla każdego wiersza dodajemy komórkę z przyciskiem "Usuń"
+              // Używamy atrybutu "data-id", aby przechować ID opłaty w przycisku
+              tableHTML += `
+                  <tr>
+                      <td>${oplata.Data}</td>
+                      <td>${oplata.Imie} ${oplata.Nazwisko}</td>
+                      <td>${oplata.Opis}</td>
+                      <td>${Number(oplata.Wartosc).toFixed(2)} zł</td>
+                      <td>
+                          <button class="przycisk-usun" data-id="${oplata.Id_oplaty}">Usuń</button>
+                      </td>
+                  </tr>
+              `;
+          });
+
+          tableHTML += '</tbody></table>';
+          listaOplatContainer.innerHTML = tableHTML;
+
+      } catch (error) {
+          listaOplatContainer.innerHTML = `<p style="color:red;">Błąd ładowania opłat: ${error.message}</p>`;
+      }
+  }
