@@ -1,11 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+  // --- OBSŁUGA LOGOWANIA ---
   const loginForm = document.getElementById('loginForm');
-
-  const pathname = window.location.pathname;
-  if (!pathname.includes('login.html') && !pathname.includes('index.html') && !pathname.includes('galeria.html') && !pathname.includes('kontakt.html') && !pathname.includes('regulamin.html')) {
-    checkLogin();
-  }
-
   if (loginForm) {
     loginForm.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -23,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const user = users.find(u => u.login === login && u.password === password && u.role === role);
 
       if (user) {
-        const session = { login: user.login, role: user.role };
+        const session = { login: user.login, role: user.role, id: 1 }; // UWAGA: Dodałem na stałe ID studenta dla testów
         sessionStorage.setItem('sessionUser', JSON.stringify(session));
         sessionStorage.setItem('loggedIn', 'true');
         window.location.href = 'dashboard.html';
@@ -33,51 +29,48 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const sessionInfo = document.getElementById('sessionInfo');
-  if (sessionInfo) {
-    const sessionData = sessionStorage.getItem('sessionUser');
-    if (sessionData) {
-      const user = JSON.parse(sessionData);
+  // --- SPRAWDZANIE SESJI I UPRAWNIEŃ ---
+  const sessionData = sessionStorage.getItem('sessionUser');
+  if (sessionData) {
+    const user = JSON.parse(sessionData);
 
-      if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '') {
-        sessionInfo.innerHTML = `
-          Zalogowano jako <strong>${user.login}</strong> (${user.role})<br />
-          <button id="goToPanel">Przejdź do panelu</button>
-        `;
-        document.getElementById('goToPanel').addEventListener('click', () => {
-          window.location.href = 'dashboard.html';
-        });
-      } else {
-        sessionInfo.textContent = `Zalogowany jako: ${user.login} (${user.role})`;
-      }
+    // Wyświetlanie informacji o zalogowanym użytkowniku
+    const sessionInfo = document.getElementById('sessionInfo');
+    if (sessionInfo) {
+      sessionInfo.textContent = `Zalogowany jako: ${user.login} (${user.role})`;
+    }
 
-      const rolePermissions = {
+    // Zarządzanie widocznością przycisków na stronie głównej
+    const loginContainer = document.getElementById('loginContainer');
+    const userInfo = document.getElementById('userInfo');
+    if (loginContainer) loginContainer.style.display = 'none';
+    if (userInfo) userInfo.style.display = 'block';
+
+    // Ukrywanie niedozwolonych linków w nawigacji
+    const rolePermissions = {
         student: ['dashboard', 'dodaj_wniosek', 'dodaj_oplate', 'usterki', 'index', 'galeria', 'regulamin', 'kontakt'],
         recepcja: ['dashboard', 'rejestracja', 'usterki', 'index', 'galeria', 'regulamin', 'kontakt'],
         admin: ['dashboard', 'rejestracja', 'dodaj_wniosek', 'dodaj_oplate', 'generuj_raport', 'komunikaty', 'index', 'galeria', 'regulamin', 'kontakt'],
         dbadmin: ['dashboard', 'generuj_raport', 'index', 'galeria', 'regulamin', 'kontakt']
-      };
-
-      document.querySelectorAll('nav ul li').forEach(li => {
-        const href = li.querySelector('a')?.getAttribute('href');
-        if (href) {
-          const page = href.replace('.html', '');
-          if (!rolePermissions[user.role].includes(page) && page !== 'login') {
-            li.style.display = 'none';
-          }
-        }
-      });
-    } else {
-      if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '') {
-        sessionInfo.innerHTML = `<button id="loginBtn">Logowanie</button>`;
-        document.getElementById('loginBtn').addEventListener('click', () => {
-          window.location.href = 'login.html';
-        });
+    };
+    document.querySelectorAll('nav ul li a').forEach(a => {
+      const page = a.getAttribute('href').replace('.html', '');
+      if (page !== 'login' && !rolePermissions[user.role].includes(page)) {
+        a.parentElement.style.display = 'none';
       }
+    });
+
+  } else {
+    // Sprawdzanie, czy strona wymaga logowania
+    const pathname = window.location.pathname;
+    const isPublicPage = ['/login.html', '/index.html', '/galeria.html', '/kontakt.html', '/regulamin.html'].some(page => pathname.endsWith(page));
+    if (!isPublicPage && !pathname.endsWith('/')) {
+        checkLogin();
     }
   }
 
-  const logoutLink = document.querySelector('a[href="login.html"]');
+  // --- OBSŁUGA WYLOGOWYWANIA ---
+  const logoutLink = document.getElementById('logoutBtn');
   if (logoutLink) {
     logoutLink.addEventListener('click', function (e) {
       e.preventDefault();
@@ -86,77 +79,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const sessionData = sessionStorage.getItem('sessionUser');
-  const loginContainer = document.getElementById('loginContainer');
-  const userInfo = document.getElementById('userInfo');
-
-  if (sessionData) {
-    const user = JSON.parse(sessionData);
-    if (loginContainer) loginContainer.style.display = 'none';
-    if (userInfo) {
-      userInfo.style.display = 'block';
-      if (sessionInfo) {
-        sessionInfo.textContent = `Zalogowano jako: ${user.login} (${user.role})`;
-      }
-    }
-  } else {
-    if (loginContainer) loginContainer.style.display = 'block';
-    if (userInfo) userInfo.style.display = 'none';
-  }
-
-
-
-  const zoomBtn = document.getElementById('zoomBtn');
-  const mapContainer = document.getElementById('map-container');
-  if (zoomBtn && mapContainer) {
-    let zoomed = false;
-    zoomBtn.addEventListener('click', () => {
-      if (!zoomed) {
-        mapContainer.style.height = '600px';
-        zoomBtn.textContent = 'Zmniejsz mapę';
-      } else {
-        mapContainer.style.height = '300px';
-        zoomBtn.textContent = 'Powiększ mapę';
-      }
-      zoomed = !zoomed;
-    });
-  }
-
+  // --- OBSŁUGA FORMULARZA WNIOSKU ---
   const wniosekForm = document.getElementById('wniosekForm');
-
-  console.log('Wynik szukania formularza o ID "wniosekForm":', wniosekForm);
-
   if (wniosekForm) {
     wniosekForm.addEventListener('submit', async (e) => {
-      console.log('Formularz został wysłany, funkcja wystartowała!');
       e.preventDefault();
 
+      const sessionData = sessionStorage.getItem('sessionUser');
+      if (!sessionData) {
+          alert('Błąd: Sesja wygasła. Zaloguj się ponownie.');
+          return;
+      }
+      const user = JSON.parse(sessionData);
+
       const formData = {
-        // UWAGA: To ID wciąż jest wpisane na stałe.
-        // Docelowo pobierzesz je z `sessionStorage` po zalogowaniu.
-        idStudenta: 1,
-
+        idStudenta: user.id, // Pobieramy ID studenta z sesji!
         typ: 'Wniosek o miejsce w akademiku',
-
         dataZlozenia: new Date().toISOString().slice(0, 10)
       };
 
-      console.log('Wysyłam do serwera tylko potrzebne dane:', formData);
+      console.log('Wysyłam do serwera:', formData);
 
       try {
         const response = await fetch('api/dodaj_wniosek.php', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData)
         });
-
         const result = await response.json();
-
         if (response.ok) {
           alert('Sukces! ' + result.message);
           wniosekForm.reset();
+          // Opcjonalnie: odśwież listę wniosków po dodaniu nowego
+          if (document.getElementById('listaWnioskow')) {
+            pobierzIWyswietlWnioski();
+          }
         } else {
           alert('Błąd: ' + result.message);
         }
@@ -167,11 +124,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- OBSŁUGA WYŚWIETLANIA LISTY WNIOSKÓW ---
+  const listaWnioskow = document.getElementById('listaWnioskow');
+  if (listaWnioskow) {
+    pobierzIWyswietlWnioski(); // Wywołujemy funkcję, aby załadować listę
+  }
 });
 
+// --- FUNKCJE POMOCNICZE ---
+
 function checkLogin() {
-  const session = sessionStorage.getItem('sessionUser');
-  if (!session) {
+  if (!sessionStorage.getItem('sessionUser')) {
     window.location.href = 'login.html';
   }
+}
+
+async function pobierzIWyswietlWnioski() {
+    const listaWnioskow = document.getElementById('listaWnioskow');
+    if (!listaWnioskow) return; // Zabezpieczenie
+
+    listaWnioskow.innerHTML = '<option>Ładowanie...</option>';
+    try {
+      const response = await fetch('api/pobierz_wnioski.php');
+      const wnioski = await response.json();
+      listaWnioskow.innerHTML = ''; // Wyczyść listę
+      if (wnioski.length > 0) {
+        wnioski.forEach(wniosek => {
+          const opcja = document.createElement('option');
+          opcja.value = wniosek.Id_wniosku;
+          opcja.textContent = `Wniosek #${wniosek.Id_wniosku} - ${wniosek.Typ} (Status: ${wniosek.Przyjety ? 'Przyjęty' : 'Przetwarzany'})`;
+          listaWnioskow.appendChild(opcja);
+        });
+      } else {
+        listaWnioskow.innerHTML = '<option>-- Brak wniosków --</option>';
+      }
+    } catch (error) {
+      console.error('Błąd pobierania wniosków:', error);
+      listaWnioskow.innerHTML = '<option>-- Błąd ładowania danych --</option>';
+    }
 }
