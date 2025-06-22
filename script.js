@@ -195,6 +195,71 @@ if (listaOplatContainer) {
           listaOplatContainer.innerHTML = `<p style="color:red;">Błąd ładowania opłat: ${error.message}</p>`;
       }
   }
+
+  const usterkaForm = document.getElementById('usterkaForm');
+if (usterkaForm) {
+    usterkaForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = {
+            nrPokoju: document.getElementById('usterkaNrPokoju').value,
+            opis: document.getElementById('usterkaOpis').value,
+        };
+
+        try {
+            const response = await fetch('api/dodaj_usterke.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+
+            alert('Sukces! ' + result.message);
+            usterkaForm.reset();
+            pobierzIWyswietlUsterki(); // Odśwież listę
+        } catch (error) {
+            alert('Błąd: ' + error.message);
+        }
+    });
+}
+
+// --- OBSŁUGA WYŚWIETLANIA I USUWANIA USTEREK ---
+const listaUsterekContainer = document.getElementById('listaUsterekContainer');
+if (listaUsterekContainer) {
+    pobierzIWyswietlUsterki(); // Pobierz listę przy ładowaniu strony
+
+    // Nasłuchiwanie na kliknięcia przycisków "Usuń" i "Edytuj"
+    listaUsterekContainer.addEventListener('click', async (e) => {
+        // Logika dla przycisku "Usuń"
+        if (e.target.classList.contains('przycisk-usun-usterke')) {
+            if (!confirm('Czy na pewno chcesz usunąć to zgłoszenie usterki?')) return;
+
+            const idDoUsuniecia = e.target.dataset.id;
+            try {
+                const response = await fetch('api/usun_usterke.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: idDoUsuniecia })
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message);
+
+                alert(result.message);
+                pobierzIWyswietlUsterki(); // Odśwież listę
+            } catch (error) {
+                alert('Błąd: ' + error.message);
+            }
+        }
+
+        // Logika dla przycisku "Edytuj" (dodamy ją później)
+        if (e.target.classList.contains('przycisk-edytuj-usterke')) {
+            const idDoEdycji = e.target.dataset.id;
+            alert(`Funkcjonalność edycji dla usterki o ID ${idDoEdycji} zostanie dodana wkrótce!`);
+            // openUsterkaEditModal(idDoEdycji);
+        }
+    });
+}
+
 });
 
 // =====================================================================
@@ -348,5 +413,58 @@ function dostosujWidokPoZalogowaniu(user) {
     const sessionInfo = document.getElementById('sessionInfo');
     if (sessionInfo) {
       sessionInfo.textContent = `Zalogowany jako: ${user.login} (${user.role})`;
+    }
+}
+
+async function pobierzIWyswietlUsterki() {
+    if (!listaUsterekContainer) return;
+    listaUsterekContainer.innerHTML = '<p>Ładowanie listy usterek...</p>';
+    try {
+        const response = await fetch('api/pobierz_usterki.php');
+        const usterki = await response.json();
+        if (!response.ok) throw new Error(usterki.message);
+
+        if (usterki.length === 0) {
+            listaUsterekContainer.innerHTML = '<p>Brak zgłoszonych usterek.</p>';
+            return;
+        }
+
+        let tableHTML = `<table border="1" style="width:100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Data Zgłoszenia</th>
+                    <th>Pokój</th>
+                    <th>Opis</th>
+                    <th>Status</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        usterki.forEach(usterka => {
+            let statusText = 'Nieznany';
+            if (usterka.Naprawiona == 1) statusText = 'Naprawiona';
+            else if (usterka.W_naprawie == 1) statusText = 'W naprawie';
+            else if (usterka.Zgloszona == 1) statusText = 'Zgłoszona';
+
+            tableHTML += `
+                <tr>
+                    <td>${usterka.DataZgloszenia}</td>
+                    <td>${usterka.Nr_pokoju}</td>
+                    <td>${usterka.Opis}</td>
+                    <td>${statusText}</td>
+                    <td>
+                        <button class="przycisk-edytuj-usterke" data-id="${usterka.Id_usterki}">Edytuj</button>
+                        <button class="przycisk-usun-usterke" data-id="${usterka.Id_usterki}">Usuń</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tableHTML += '</tbody></table>';
+        listaUsterekContainer.innerHTML = tableHTML;
+
+    } catch (error) {
+        listaUsterekContainer.innerHTML = `<p style="color:red;">Błąd ładowania usterek: ${error.message}</p>`;
     }
 }
