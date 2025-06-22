@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const wniosekForm = document.getElementById('wniosekForm');
   if (wniosekForm) {
     wniosekForm.addEventListener('submit', async (e) => {
+      console.log('JavaScript PRZEJĄŁ KONTROLĘ nad formularzem!');
       e.preventDefault();
 
       const sessionData = sessionStorage.getItem('sessionUser');
