@@ -103,10 +103,48 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- OBSŁUGA WYŚWIETLANIA LISTY OPŁAT ---
-  const listaOplatContainer = document.getElementById('listaOplatContainer');
-  if (listaOplatContainer) {
-      pobierzIWyswietlOplaty(); // Wywołaj funkcję na starcie
-  }
+// Wewnątrz document.addEventListener('DOMContentLoaded', ...);
+
+const listaOplatContainer = document.getElementById('listaOplatContainer');
+if (listaOplatContainer) {
+    pobierzIWyswietlOplaty(); // To już masz
+
+    // --- DODAJ TEN NOWY FRAGMENT ---
+    // Nasłuchuj na kliknięcia w całym kontenerze tabeli
+    listaOplatContainer.addEventListener('click', async (e) => {
+        // Sprawdź, czy kliknięty element to na pewno nasz przycisk "Usuń"
+        if (e.target.classList.contains('przycisk-usun')) {
+
+            // Poproś o potwierdzenie - to dobra praktyka!
+            if (!confirm('Czy na pewno chcesz usunąć tę opłatę?')) {
+                return; // Przerwij, jeśli użytkownik kliknie "Anuluj"
+            }
+
+            // Pobierz ID opłaty do usunięcia z atrybutu data-id przycisku
+            const idDoUsuniecia = e.target.dataset.id;
+
+            try {
+                const response = await fetch('api/usun_oplate.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: idDoUsuniecia }) // Wysyłamy ID w formacie JSON
+                });
+
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message);
+
+                alert('Sukces! ' + result.message);
+                pobierzIWyswietlOplaty(); // Odśwież listę opłat po usunięciu
+
+            } catch (error) {
+                alert('Błąd: ' + error.message);
+                console.error("Błąd podczas usuwania opłaty:", error);
+            }
+        }
+    });
+}
+
+  // ZASTĄP starą wersję tej funkcji w script.js
 
   async function pobierzIWyswietlOplaty() {
       if (!listaOplatContainer) return;
@@ -121,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
               return;
           }
 
-          // Tworzymy tabelę do wyświetlenia danych
+          // Dodajemy nową kolumnę "Akcja" w nagłówku
           let tableHTML = `<table border="1" style="width:100%; border-collapse: collapse;">
               <thead>
                   <tr>
@@ -129,17 +167,23 @@ document.addEventListener('DOMContentLoaded', () => {
                       <th>Student</th>
                       <th>Opis</th>
                       <th>Kwota</th>
+                      <th>Akcja</th>
                   </tr>
               </thead>
               <tbody>`;
 
           oplaty.forEach(oplata => {
+              // Dla każdego wiersza dodajemy komórkę z przyciskiem "Usuń"
+              // Używamy atrybutu "data-id", aby przechować ID opłaty w przycisku
               tableHTML += `
                   <tr>
                       <td>${oplata.Data}</td>
                       <td>${oplata.Imie} ${oplata.Nazwisko}</td>
                       <td>${oplata.Opis}</td>
                       <td>${Number(oplata.Wartosc).toFixed(2)} zł</td>
+                      <td>
+                          <button class="przycisk-usun" data-id="${oplata.Id_oplaty}">Usuń</button>
+                      </td>
                   </tr>
               `;
           });
