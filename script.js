@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
   //======================================================================
 
   // --- OBSŁUGA FORMULARZA DODAWANIA OPŁATY ---
-  const oplatForm = document.getElementById('oplatyForm');
+  const oplatyForm = document.getElementById('oplatyForm');
   if (oplatyForm) {
       oplatyForm.addEventListener('submit', async (e) => {
           e.preventDefault();
