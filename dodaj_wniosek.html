@@ -46,6 +46,30 @@
 
 </main>
 
+
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span id="closeBtn" class="close-button">&times;</span>
+    <h2>Edytuj Wniosek</h2>
+    <form id="editForm">
+      <input type="hidden" id="idWniosku" name="idWniosku">
+
+      <label>Typ wniosku:</label><br>
+      <input type="text" id="typWniosku" name="typWniosku" style="width:100%; padding: 8px;" required><br><br>
+
+      <label>Status:</label><br>
+      <select id="statusWniosku" name="statusWniosku" style="width:100%; padding: 8px;">
+        <option value="przetwarzany">Przetwarzany</option>
+        <option value="przyjety">Przyjęty</option>
+        <option value="odrzucony">Odrzucony</option>
+        <option value="wstrzymany">Wstrzymany</option>
+      </select><br><br>
+
+      <button type="submit">Zapisz zmiany</button>
+      <p id="komunikatEdycji" style="margin-top: 15px;"></p>
+    </form>
+  </div>
+</div>
   <script src="script.js"></script>
 </body>
 </html>

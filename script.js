@@ -126,10 +126,59 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- OBSŁUGA WYŚWIETLANIA LISTY WNIOSKÓW ---
-  const listaWnioskow = document.getElementById('listaWnioskow');
-  if (listaWnioskow) {
-    pobierzIWyswietlWnioski(); // Wywołujemy funkcję, aby załadować listę
+// Wewnątrz document.addEventListener... ZASTĄP stary blok if(listaWnioskow) tym poniżej
+
+const listaWnioskow = document.getElementById('listaWnioskow');
+const editModal = document.getElementById('editModal');
+const closeBtn = document.getElementById('closeBtn');
+
+if (listaWnioskow) {
+  pobierzIWyswietlWnioski(); // Ładujemy listę na starcie
+
+  // Logika otwierania modala po podwójnym kliknięciu
+  listaWnioskow.addEventListener('dblclick', async () => {
+    const idWniosku = listaWnioskow.value;
+    if (!idWniosku) return;
+
+    // Pobierz dane konkretnego wniosku z serwera
+    try {
+      const response = await fetch(`api/pobierz_jeden_wniosek.php?id=${idWniosku}`);
+      const dane = await response.json();
+
+      if (dane.message) {
+        alert(dane.message);
+        return;
+      }
+
+      // Wypełnij pola formularza w modalu danymi z bazy
+      document.getElementById('idWniosku').value = dane.Id_wniosku;
+      document.getElementById('typWniosku').value = dane.Typ;
+
+      // Ustaw odpowiedni status
+      if (dane.Przyjety == 1) document.getElementById('statusWniosku').value = 'przyjety';
+      // ... można dodać resztę statusów, jeśli backend je zwraca
+
+      // Pokaż okno modalne
+      editModal.style.display = 'block';
+
+    } catch (error) {
+      console.error('Błąd pobierania danych wniosku:', error);
+      alert('Nie udało się załadować danych do edycji.');
+    }
+  });
+}
+
+// Logika zamykania modala
+if (editModal) {
+  closeBtn.onclick = () => {
+    editModal.style.display = 'none';
   }
+  window.onclick = (event) => {
+    if (event.target == editModal) {
+      editModal.style.display = 'none';
+    }
+  }
+}
 });
 
 // --- FUNKCJE POMOCNICZE ---
