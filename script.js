@@ -124,6 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const wniosekForm = document.getElementById('wniosekForm');
 
+console.log('Wynik szukania formularza o ID "wniosekForm":', wniosekForm);
+
 if (wniosekForm) {
   wniosekForm.addEventListener('submit', async (e) => {
     console.log('Formularz został wysłany, funkcja wystartowała!');
