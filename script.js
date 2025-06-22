@@ -122,50 +122,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-const wniosekForm = document.getElementById('wniosekForm');
+  const wniosekForm = document.getElementById('wniosekForm');
 
-console.log('Wynik szukania formularza o ID "wniosekForm":', wniosekForm);
+  console.log('Wynik szukania formularza o ID "wniosekForm":', wniosekForm);
 
-if (wniosekForm) {
-  wniosekForm.addEventListener('submit', async (e) => {
-    console.log('Formularz został wysłany, funkcja wystartowała!');
-    e.preventDefault();
+  if (wniosekForm) {
+    wniosekForm.addEventListener('submit', async (e) => {
+      console.log('Formularz został wysłany, funkcja wystartowała!');
+      e.preventDefault();
 
-    const formData = {
-      // UWAGA: To ID wciąż jest wpisane na stałe.
-      // Docelowo pobierzesz je z `sessionStorage` po zalogowaniu.
-      idStudenta: 1,
+      const formData = {
+        // UWAGA: To ID wciąż jest wpisane na stałe.
+        // Docelowo pobierzesz je z `sessionStorage` po zalogowaniu.
+        idStudenta: 1,
 
-      typ: 'Wniosek o miejsce w akademiku',
+        typ: 'Wniosek o miejsce w akademiku',
 
-      dataZlozenia: new Date().toISOString().slice(0, 10)
-    };
+        dataZlozenia: new Date().toISOString().slice(0, 10)
+      };
 
-    console.log('Wysyłam do serwera tylko potrzebne dane:', formData);
+      console.log('Wysyłam do serwera tylko potrzebne dane:', formData);
 
-    try {
-      const response = await fetch('api/dodaj_wniosek.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
+      try {
+        const response = await fetch('api/dodaj_wniosek.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (response.ok) {
-        alert('Sukces! ' + result.message);
-        wniosekForm.reset();
-      } else {
-        alert('Błąd: ' + result.message);
+        if (response.ok) {
+          alert('Sukces! ' + result.message);
+          wniosekForm.reset();
+        } else {
+          alert('Błąd: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Błąd komunikacji z serwerem:', error);
+        alert('Wystąpił błąd sieci. Spróbuj ponownie.');
       }
-    } catch (error) {
-      console.error('Błąd komunikacji z serwerem:', error);
-      alert('Wystąpił błąd sieci. Spróbuj ponownie.');
-    }
-  });
-}
+    });
+  }
 
 });
 
