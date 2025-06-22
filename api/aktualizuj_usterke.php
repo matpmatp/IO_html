@@ -1,5 +1,4 @@
 <?php
-// Plik: api/aktualizuj_usterke.php
 
 require_once 'db_connect.php';
 header('Content-Type: application/json');
@@ -19,12 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $conn->begin_transaction();
     try {
-        // Aktualizacja opisu w tabeli Usterka
         $stmt1 = $conn->prepare("UPDATE Usterka SET Opis = ? WHERE Id_usterki = ?");
         $stmt1->bind_param("si", $opis, $idUsterki);
         $stmt1->execute();
 
-        // Aktualizacja statusu w tabeli StatusUsterki
         $zgloszona = ($nowyStatus === 'zgloszona') ? 1 : 0;
         $w_naprawie = ($nowyStatus === 'w_naprawie') ? 1 : 0;
         $naprawiona = ($nowyStatus === 'naprawiona') ? 1 : 0;

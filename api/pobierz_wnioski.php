@@ -6,7 +6,6 @@ header('Content-Type: application/json');
 
 $wnioski = [];
 
-// ZAPYTANIE SQL POBIERA TERAZ WSZYSTKIE FLAGI STATUSU
 $sql = "
     SELECT
         w.Id_wniosku,

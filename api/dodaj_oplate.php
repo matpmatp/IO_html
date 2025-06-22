@@ -1,5 +1,4 @@
 <?php
-// Plik: api/dodaj_oplate.php
 
 require_once 'db_connect.php';
 header('Content-Type: application/json');
@@ -11,14 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $kwota = $data['kwota'];
     $opis = $data['opis'];
 
-    // Prosta walidacja, czy dane nie są puste
     if (!empty($idStudenta) && !empty($kwota)) {
 
-        // Używamy NOW(), aby baza danych sama wstawiła aktualną datę i czas
         $sql = "INSERT INTO Opłata (Id_studenta, Wartosc, Opis, Data) VALUES (?, ?, ?, NOW())";
 
         $stmt = $conn->prepare($sql);
-        // 'ids' -> integer (id studenta), double (kwota), string (opis)
         $stmt->bind_param("ids", $idStudenta, $kwota, $opis);
 
         if ($stmt->execute()) {

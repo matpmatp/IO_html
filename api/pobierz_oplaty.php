@@ -1,12 +1,10 @@
 <?php
-// Plik: api/pobierz_oplaty.php
 
 require_once 'db_connect.php';
 header('Content-Type: application/json');
 
 $oplaty = [];
 
-// Pobieramy opłaty i dołączamy dane studenta (Imię, Nazwisko) za pomocą JOIN
 $sql = "
     SELECT
         o.Id_oplaty,

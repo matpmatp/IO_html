@@ -1,10 +1,8 @@
 <?php
-// api/pobierz_jeden_wniosek.php
 
 require_once 'db_connect.php';
 header('Content-Type: application/json');
 
-// Sprawdź, czy ID zostało przesłane w adresie URL
 if (!isset($_GET['id'])) {
     http_response_code(400);
     echo json_encode(['message' => 'Brak ID wniosku.']);
@@ -13,7 +11,6 @@ if (!isset($_GET['id'])) {
 
 $id_wniosku = $_GET['id'];
 
-// Używamy prepared statements dla bezpieczeństwa
 $sql = "SELECT w.Id_wniosku, w.Typ, sw.Przyjety FROM Wniosek AS w LEFT JOIN StatusWniosku AS sw ON w.Id_wniosku = sw.Id_wniosku WHERE w.Id_wniosku = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id_wniosku);

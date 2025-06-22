@@ -1,5 +1,4 @@
 <?php
-// Plik: api/usun_usterke.php
 require_once 'db_connect.php';
 header('Content-Type: application/json');
 
@@ -10,17 +9,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($id_usterki)) {
         $conn->begin_transaction();
         try {
-            // Krok 1: Usuń powiązane zlecenia naprawy (jeśli istnieją)
             $stmt1 = $conn->prepare("DELETE FROM ZlecenieNaprawy WHERE Id_usterki = ?");
             $stmt1->bind_param("i", $id_usterki);
             $stmt1->execute();
 
-            // Krok 2: Usuń status usterki
             $stmt2 = $conn->prepare("DELETE FROM StatusUsterki WHERE Id_usterki = ?");
             $stmt2->bind_param("i", $id_usterki);
             $stmt2->execute();
 
-            // Krok 3: Usuń główną usterkę
             $stmt3 = $conn->prepare("DELETE FROM Usterka WHERE Id_usterki = ?");
             $stmt3->bind_param("i", $id_usterki);
             $stmt3->execute();

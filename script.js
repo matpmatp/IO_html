@@ -1,7 +1,3 @@
-// =====================================================================
-// ===          KOMPLETNA I POPRAWIONA WERSJA SCRIPT.JS          ===
-// =====================================================================
-
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM załadowany, skrypt startuje.');
 
@@ -68,10 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-      //======================================================================
-  // === NOWY KOD DO OBSŁUGI OPŁAT - dodaj do script.js ===
-  //======================================================================
-
   // --- OBSŁUGA FORMULARZA DODAWANIA OPŁATY ---
   const oplatyForm = document.getElementById('oplatyForm');
   if (oplatyForm) {
@@ -103,38 +95,35 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- OBSŁUGA WYŚWIETLANIA LISTY OPŁAT ---
-// Wewnątrz document.addEventListener('DOMContentLoaded', ...);
 
 const listaOplatContainer = document.getElementById('listaOplatContainer');
 if (listaOplatContainer) {
-    pobierzIWyswietlOplaty(); // To już masz
+    pobierzIWyswietlOplaty();
 
-    // --- DODAJ TEN NOWY FRAGMENT ---
-    // Nasłuchuj na kliknięcia w całym kontenerze tabeli
     listaOplatContainer.addEventListener('click', async (e) => {
-        // Sprawdź, czy kliknięty element to na pewno nasz przycisk "Usuń"
+
         if (e.target.classList.contains('przycisk-usun')) {
 
-            // Poproś o potwierdzenie - to dobra praktyka!
+
             if (!confirm('Czy na pewno chcesz usunąć tę opłatę?')) {
-                return; // Przerwij, jeśli użytkownik kliknie "Anuluj"
+                return;
             }
 
-            // Pobierz ID opłaty do usunięcia z atrybutu data-id przycisku
+
             const idDoUsuniecia = e.target.dataset.id;
 
             try {
                 const response = await fetch('api/usun_oplate.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: idDoUsuniecia }) // Wysyłamy ID w formacie JSON
+                    body: JSON.stringify({ id: idDoUsuniecia })
                 });
 
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.message);
 
                 alert('Sukces! ' + result.message);
-                pobierzIWyswietlOplaty(); // Odśwież listę opłat po usunięciu
+                pobierzIWyswietlOplaty();
 
             } catch (error) {
                 alert('Błąd: ' + error.message);
@@ -143,11 +132,6 @@ if (listaOplatContainer) {
         }
     });
 }
-
-
-//======================================================================
-// === WKLEJ TEN BLOK DO SWOJEGO ISTNIEJĄCEGO SCRIPT.JS ===
-//======================================================================
 
   const usterkaForm = document.getElementById('usterkaForm');
   if (usterkaForm) {
@@ -171,15 +155,12 @@ if (listaOplatContainer) {
 
               const result = await response.json();
               if (!response.ok) {
-                  // Jeśli serwer zwrócił błąd, rzucamy go, aby go złapać w catch
                   throw new Error(result.message || 'Nieznany błąd serwera');
               }
 
               alert('Sukces! ' + result.message);
               usterkaForm.reset();
               pobierzIWyswietlUsterki();
-              // Jeśli masz funkcję do odświeżania listy, wywołaj ją tutaj, np.
-              // pobierzIWyswietlUsterki();
 
           } catch (error) {
               console.error('Błąd podczas dodawania usterki:', error);
@@ -191,11 +172,11 @@ if (listaOplatContainer) {
 // --- OBSŁUGA WYŚWIETLANIA I USUWANIA USTEREK ---
 const listaUsterekContainer = document.getElementById('listaUsterekContainer');
 if (listaUsterekContainer) {
-    pobierzIWyswietlUsterki(); // Pobierz listę przy ładowaniu strony
+    pobierzIWyswietlUsterki();
 
-    // Nasłuchiwanie na kliknięcia przycisków "Usuń" i "Edytuj"
+
     listaUsterekContainer.addEventListener('click', async (e) => {
-        // Logika dla przycisku "Usuń"
+
         if (e.target.classList.contains('przycisk-usun-usterke')) {
             if (!confirm('Czy na pewno chcesz usunąć to zgłoszenie usterki?')) return;
 
@@ -210,16 +191,15 @@ if (listaUsterekContainer) {
                 if (!response.ok) throw new Error(result.message);
 
                 alert(result.message);
-                pobierzIWyswietlUsterki(); // Odśwież listę
+                pobierzIWyswietlUsterki();
             } catch (error) {
                 alert('Błąd: ' + error.message);
             }
         }
 
-        // Logika dla przycisku "Edytuj" (dodamy ją później)
+
         if (e.target.classList.contains('przycisk-edytuj-usterke')) {
             const idDoEdycji = e.target.dataset.id;
-            // Wywołujemy funkcję otwierającą okno modalne, przekazując jej ID
             openUsterkaEditModal(idDoEdycji);
         }
     });
@@ -230,7 +210,6 @@ if (usterkaEditModal) {
     const closeBtn = document.getElementById('closeUsterkaModalBtn');
     const editForm = document.getElementById('usterkaEditForm');
 
-    // Logika zamykania okna
     closeBtn.onclick = () => { usterkaEditModal.style.display = 'none'; };
     window.onclick = (event) => {
         if (event.target == usterkaEditModal) {
@@ -238,7 +217,6 @@ if (usterkaEditModal) {
         }
     };
 
-    // Podpięcie funkcji do formularza edycji
     if (editForm) {
         editForm.addEventListener('submit', handleAktualizujUsterke);
     }
@@ -348,7 +326,6 @@ async function pobierzIWyswietlWnioski() {
                 const opcja = document.createElement('option');
                 opcja.value = wniosek.Id_wniosku;
 
-                // NOWA, POPRAWIONA LOGIKA USTALANIA STATUSU
                 let statusText = 'Nieokreślony';
                 if (wniosek.Przyjety == 1) {
                     statusText = 'Przyjęty';
@@ -393,7 +370,6 @@ async function openEditModal(idWniosku) {
 }
 
 function dostosujWidokPoZalogowaniu(user) {
-    // ... (ta funkcja może zawierać logikę z poprzednich wersji, np. ukrywanie menu, wyświetlanie info o sesji) ...
     const sessionInfo = document.getElementById('sessionInfo');
     if (sessionInfo) {
       sessionInfo.textContent = `Zalogowany jako: ${user.login} (${user.role})`;
@@ -467,7 +443,6 @@ async function pobierzIWyswietlUsterki() {
               return;
           }
 
-          // Dodajemy nową kolumnę "Akcja" w nagłówku
           let tableHTML = `<table border="1" style="width:100%; border-collapse: collapse;">
               <thead>
                   <tr>
@@ -481,8 +456,6 @@ async function pobierzIWyswietlUsterki() {
               <tbody>`;
 
           oplaty.forEach(oplata => {
-              // Dla każdego wiersza dodajemy komórkę z przyciskiem "Usuń"
-              // Używamy atrybutu "data-id", aby przechować ID opłaty w przycisku
               tableHTML += `
                   <tr>
                       <td>${oplata.Data}</td>
@@ -516,12 +489,10 @@ async function openUsterkaEditModal(id) {
     }
 
     try {
-        // Pobierz dane jednej usterki z serwera
         const response = await fetch(`api/pobierz_jedna_usterke.php?id=${id}`);
         const dane = await response.json();
         if (!response.ok) throw new Error(dane.message);
 
-        // Wypełnij formularz w oknie modalnym danymi z bazy
         document.getElementById('usterkaEditId').value = dane.Id_usterki;
         document.getElementById('usterkaEditOpis').value = dane.Opis;
 
@@ -530,7 +501,6 @@ async function openUsterkaEditModal(id) {
         else if (dane.W_naprawie == 1) aktualnyStatus = 'w_naprawie';
         document.getElementById('usterkaEditStatus').value = aktualnyStatus;
 
-        // Pokaż okno modalne
         modal.style.display = 'block';
 
     } catch (error) {
@@ -562,15 +532,15 @@ async function handleAktualizujUsterke(e) {
         const result = await response.json();
         if (!response.ok) throw new Error(result.message);
 
-        // Wyświetl komunikat o sukcesie i zamknij okno modalne po 1.5 sekundy
+
         komunikat.textContent = result.message;
         komunikat.style.color = 'lightgreen';
         setTimeout(() => {
             modal.style.display = 'none';
-            komunikat.textContent = ''; // Wyczyść komunikat
+            komunikat.textContent = '';
         }, 1500);
 
-        pobierzIWyswietlUsterki(); // Odśwież listę w tle
+        pobierzIWyswietlUsterki();
 
     } catch (error) {
         komunikat.textContent = 'Błąd: ' + error.message;

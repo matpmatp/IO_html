@@ -1,5 +1,4 @@
 <?php
-// Plik: api/pobierz_usterki.php
 require_once 'db_connect.php';
 header('Content-Type: application/json');
 

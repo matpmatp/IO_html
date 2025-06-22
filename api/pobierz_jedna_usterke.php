@@ -1,5 +1,4 @@
 <?php
-// Plik: api/pobierz_jedna_usterke.php
 
 require_once 'db_connect.php';
 header('Content-Type: application/json');
@@ -12,7 +11,6 @@ if (!isset($_GET['id'])) {
 
 $id_usterki = $_GET['id'];
 
-// Pobieramy dane usterki i jej aktualny status
 $sql = "
     SELECT
         u.Id_usterki, u.Nr_pokoju, u.Opis,
