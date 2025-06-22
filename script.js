@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
 
-  if (!window.location.pathname.includes('login.html')) {
+  const pathname = window.location.pathname;
+  if (!pathname.includes('login.html') && !pathname.includes('index.html')) {
     checkLogin();
   }
 
@@ -32,17 +33,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (document.getElementById('sessionInfo')) {
+  const sessionInfo = document.getElementById('sessionInfo');
+  if (sessionInfo) {
     const sessionData = sessionStorage.getItem('sessionUser');
     if (sessionData) {
       const user = JSON.parse(sessionData);
-      document.getElementById('sessionInfo').textContent = `Zalogowany jako: ${user.login} (${user.role})`;
+
+      if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '') {
+        sessionInfo.innerHTML = `
+          Zalogowano jako <strong>${user.login}</strong> (${user.role})<br />
+          <button id="goToPanel">Przejdź do panelu</button>
+        `;
+        document.getElementById('goToPanel').addEventListener('click', () => {
+          window.location.href = 'dashboard.html';
+        });
+      } else {
+        sessionInfo.textContent = `Zalogowany jako: ${user.login} (${user.role})`;
+      }
 
       const rolePermissions = {
-        student: ['dashboard', 'dodaj_wniosek', 'dodaj_oplate', 'usterki'],
-        recepcja: ['dashboard', 'rejestracja', 'usterki'],
-        admin: ['dashboard', 'rejestracja', 'dodaj_wniosek', 'dodaj_oplate', 'generuj_raport', 'komunikaty'],
-        dbadmin: ['dashboard', 'generuj_raport']
+        student: ['dashboard', 'dodaj_wniosek', 'dodaj_oplate', 'usterki', 'index', 'galeria', 'regulamin', 'kontakt'],
+        recepcja: ['dashboard', 'rejestracja', 'usterki', 'index', 'galeria', 'regulamin', 'kontakt'],
+        admin: ['dashboard', 'rejestracja', 'dodaj_wniosek', 'dodaj_oplate', 'generuj_raport', 'komunikaty', 'index', 'galeria', 'regulamin', 'kontakt'],
+        dbadmin: ['dashboard', 'generuj_raport', 'index', 'galeria', 'regulamin', 'kontakt']
       };
 
       document.querySelectorAll('nav ul li').forEach(li => {
@@ -54,6 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
       });
+    } else {
+      if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '') {
+        sessionInfo.innerHTML = `<button id="loginBtn">Logowanie</button>`;
+        document.getElementById('loginBtn').addEventListener('click', () => {
+          window.location.href = 'login.html';
+        });
+      }
     }
   }
 
@@ -65,6 +85,44 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = 'login.html';
     });
   }
+
+  const sessionData = sessionStorage.getItem('sessionUser');
+  const loginContainer = document.getElementById('loginContainer');
+  const userInfo = document.getElementById('userInfo');
+
+  if (sessionData) {
+    const user = JSON.parse(sessionData);
+    if (loginContainer) loginContainer.style.display = 'none';
+    if (userInfo) {
+      userInfo.style.display = 'block';
+      if (sessionInfo) {
+        sessionInfo.textContent = `Zalogowano jako: ${user.login} (${user.role})`;
+      }
+    }
+  } else {
+    if (loginContainer) loginContainer.style.display = 'block';
+    if (userInfo) userInfo.style.display = 'none';
+  }
+
+
+
+  const zoomBtn = document.getElementById('zoomBtn');
+  const mapContainer = document.getElementById('map-container');
+  if (zoomBtn && mapContainer) {
+    let zoomed = false;
+    zoomBtn.addEventListener('click', () => {
+      if (!zoomed) {
+        mapContainer.style.height = '600px';
+        zoomBtn.textContent = 'Zmniejsz mapę';
+      } else {
+        mapContainer.style.height = '300px';
+        zoomBtn.textContent = 'Powiększ mapę';
+      }
+      zoomed = !zoomed;
+    });
+  }
+
+
 });
 
 function checkLogin() {
