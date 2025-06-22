@@ -2,8 +2,6 @@
 // api/pobierz_wnioski.php -- WERSJA POPRAWIONA
 
 // Po rozwiązaniu problemu, usuń te dwie linie, aby nie pokazywać błędów na produkcji!
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 
 require_once 'db_connect.php';
 
