@@ -219,10 +219,27 @@ if (listaUsterekContainer) {
         // Logika dla przycisku "Edytuj" (dodamy ją później)
         if (e.target.classList.contains('przycisk-edytuj-usterke')) {
             const idDoEdycji = e.target.dataset.id;
-            alert(`Funkcjonalność edycji dla usterki o ID ${idDoEdycji} zostanie dodana wkrótce!`);
-            // openUsterkaEditModal(idDoEdycji);
+            // Wywołujemy funkcję otwierającą okno modalne, przekazując jej ID
+            openUsterkaEditModal(idDoEdycji);
         }
     });
+}
+
+const usterkaEditModal = document.getElementById('usterkaEditModal');
+if (usterkaEditModal) {
+    const closeBtn = document.getElementById('closeUsterkaModalBtn');
+    const editForm = document.getElementById('usterkaEditForm');
+
+    closeBtn.onclick = () => { usterkaEditModal.style.display = 'none'; };
+    window.onclick = (event) => {
+        if (event.target == usterkaEditModal) {
+            usterkaEditModal.style.display = 'none';
+        }
+    };
+
+    if (editForm) {
+        editForm.addEventListener('submit', handleAktualizujUsterke);
+    }
 }
 
 });
@@ -484,3 +501,60 @@ async function pobierzIWyswietlUsterki() {
           listaOplatContainer.innerHTML = `<p style="color:red;">Błąd ładowania opłat: ${error.message}</p>`;
       }
   }
+
+
+  async function openUsterkaEditModal(id) {
+    const modal = document.getElementById('usterkaEditModal');
+    if (!modal) return;
+
+    try {
+        const response = await fetch(`api/pobierz_jedna_usterke.php?id=${id}`);
+        const dane = await response.json();
+        if (!response.ok) throw new Error(dane.message);
+
+        // Wypełnij formularz w modalu
+        document.getElementById('usterkaEditId').value = dane.Id_usterki;
+        document.getElementById('usterkaEditOpis').value = dane.Opis;
+
+        let aktualnyStatus = 'zgloszona';
+        if (dane.Naprawiona == 1) aktualnyStatus = 'naprawiona';
+        else if (dane.W_naprawie == 1) aktualnyStatus = 'w_naprawie';
+        document.getElementById('usterkaEditStatus').value = aktualnyStatus;
+
+        // Pokaż modal
+        modal.style.display = 'block';
+
+    } catch (error) {
+        alert('Błąd ładowania danych usterki: ' + error.message);
+    }
+}
+
+// Tę funkcję też dodaj do sekcji z funkcjami pomocniczymi
+async function handleAktualizujUsterke(e) {
+    e.preventDefault();
+    const komunikat = document.getElementById('komunikatEdycjiUsterki');
+
+    const formData = {
+        idUsterki: document.getElementById('usterkaEditId').value,
+        opis: document.getElementById('usterkaEditOpis').value,
+        status: document.getElementById('usterkaEditStatus').value,
+    };
+
+    try {
+        const response = await fetch('api/aktualizuj_usterke.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message);
+
+        komunikat.textContent = result.message;
+        komunikat.style.color = 'lightgreen';
+        pobierzIWyswietlUsterki(); // Odśwież listę w tle
+
+    } catch (error) {
+        komunikat.textContent = 'Błąd: ' + error.message;
+        komunikat.style.color = 'red';
+    }
+}

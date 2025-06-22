@@ -41,6 +41,29 @@
   <div id="usterkaEditModal" class="modal">
       </div>
 
+
+      <div id="usterkaEditModal" class="modal">
+  <div class="modal-content">
+    <span id="closeUsterkaModalBtn" class="close-button">&times;</span>
+    <h2>Edytuj Zgłoszenie Usterki</h2>
+    <form id="usterkaEditForm" method="POST">
+      <input type="hidden" id="usterkaEditId" name="usterkaId">
+
+      <label>Opis usterki:</label><br>
+      <textarea id="usterkaEditOpis" required style="width:100%; height: 80px;"></textarea><br><br>
+
+      <label>Status:</label><br>
+      <select id="usterkaEditStatus" name="statusUsterki" style="width:100%; padding: 8px;">
+        <option value="zgloszona">Zgłoszona</option>
+        <option value="w_naprawie">W naprawie</option>
+        <option value="naprawiona">Naprawiona</option>
+      </select><br><br>
+
+      <button type="submit">Zapisz zmiany</button>
+      <p id="komunikatEdycjiUsterki" style="margin-top: 15px;"></p>
+    </form>
+  </div>
+</div>
   <script src="script.js"></script>
 </body>
 </html>
