@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const user = JSON.parse(sessionData);
 
       const formData = {
-        idStudenta: user.id, // Pobieramy ID studenta z sesji!
+        idStudenta: 1, // Pobieramy ID studenta z sesji! // aktualnie jest to 1 w ramach testowych
         typ: 'Wniosek o miejsce w akademiku',
         dataZlozenia: new Date().toISOString().slice(0, 10)
       };
