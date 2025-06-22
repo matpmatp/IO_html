@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
 
   const pathname = window.location.pathname;
-  if (!pathname.includes('login.html') && !pathname.includes('index.html')) {
+  if (!pathname.includes('login.html') && !pathname.includes('index.html') && !pathname.includes('galeria.html') && !pathname.includes('kontakt.html') && !pathname.includes('regulamin.html')) {
     checkLogin();
   }
 
@@ -122,6 +122,47 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+const wniosekForm = document.getElementById('wniosekForm');
+
+if (wniosekForm) {
+  wniosekForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = {
+      // UWAGA: To ID wciąż jest wpisane na stałe.
+      // Docelowo pobierzesz je z `sessionStorage` po zalogowaniu.
+      idStudenta: 1,
+
+      typ: 'Wniosek o miejsce w akademiku',
+
+      dataZlozenia: new Date().toISOString().slice(0, 10)
+    };
+
+    console.log('Wysyłam do serwera tylko potrzebne dane:', formData);
+
+    try {
+      const response = await fetch('api/dodaj_wniosek.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert('Sukces! ' + result.message);
+        wniosekForm.reset();
+      } else {
+        alert('Błąd: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Błąd komunikacji z serwerem:', error);
+      alert('Wystąpił błąd sieci. Spróbuj ponownie.');
+    }
+  });
+}
 
 });
 
