@@ -23,20 +23,53 @@
     </ul>
   </nav>
 
-  <main>
-    <p id="sessionInfo"></p>
+<main>
+  <p id="sessionInfo"></p>
 
-    <h2>Dodaj wniosek</h2>
-    <form>
-      <label>Imię i nazwisko: <input type="text" required /></label><br>
-      <label>Uczelnia: <input type="text" required /></label><br>
-      <label>Wybrany akademik: <input type="text" required /></label><br>
-      <label>Data od: <input type="date" required /></label><br>
-      <label>Data do: <input type="date" required /></label><br>
-      <button type="submit">Złóż wniosek</button>
+  <h2>Dodaj wniosek</h2>
+  <form id="wniosekForm" method="POST">
+    <label>Imię i nazwisko: <input type="text" id="wniosekImie" required /></label><br>
+    <label>Uczelnia: <input type="text" id="wniosekUczelnia" required /></label><br>
+    <label>Wybrany akademik: <input type="text" id="wniosekAkademik" required /></label><br>
+    <label>Data od: <input type="date" id="wniosekDataOd" required /></label><br>
+    <label>Data do: <input type="date" id="wniosekDataDo" required /></label><br>
+    <button type="submit">Złóż wniosek</button>
+  </form>
+
+  <hr style="margin-top: 40px; margin-bottom: 20px;">
+
+<h2>Złożone wnioski</h2>
+<p>Poniżej znajduje się lista ostatnio złożonych wniosków w systemie.</p>
+
+<select id="listaWnioskow" name="wnioski" style="width: 100%; padding: 10px; margin-top: 10px; min-height: 100px;" size="5">
+  </select>
+
+</main>
+
+
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span id="closeBtn" class="close-button">&times;</span>
+    <h2>Edytuj Wniosek</h2>
+    <form id="editForm" method="POST">
+      <input type="hidden" id="idWniosku" name="idWniosku">
+
+      <label>Typ wniosku:</label><br>
+      <input type="text" id="typWniosku" name="typWniosku" style="width:100%; padding: 8px;" required><br><br>
+
+      <label>Status:</label><br>
+      <select id="statusWniosku" name="statusWniosku" style="width:100%; padding: 8px;">
+        <option value="przetwarzany">Przetwarzany</option>
+        <option value="przyjety">Przyjęty</option>
+        <option value="odrzucony">Odrzucony</option>
+        <option value="wstrzymany">Wstrzymany</option>
+      </select><br><br>
+
+      <button type="submit">Zapisz zmiany</button>
+      <p id="komunikatEdycji" style="margin-top: 15px;"></p>
     </form>
-  </main>
-
+  </div>
+</div>
   <script src="script.js"></script>
 </body>
 </html>

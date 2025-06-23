@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header><a href="dashboard.html">← Powrót</a></header>
   <h2>Zgłoszenie usterki</h2>
 
   <nav>
@@ -25,15 +24,44 @@
   <main>
     <p id="sessionInfo"></p>
 
-    <form>
-      <label>Opis usterki:<br>
-        <textarea required></textarea>
-      </label><br>
-      <label>Dodaj zdjęcie (opcjonalnie): <input type="file" /></label><br>
+    <h2>Zgłoszenie usterki</h2>
+    <form id="usterkaForm" method="POST">
+      <label>Numer pokoju:</label><br>
+      <input type="number" id="usterkaNrPokoju" required /><br><br>
+      <label>Opis usterki:</label><br>
+      <textarea id="usterkaOpis" required style="width:100%; height: 80px;"></textarea><br><br>
       <button type="submit">Wyślij zgłoszenie</button>
     </form>
+
+    <hr style="margin-top: 40px; margin-bottom: 20px;">
+    <h2>Zgłoszone usterki</h2>
+    <div id="listaUsterekContainer"></div>
   </main>
 
+<div id="usterkaEditModal" class="modal">
+
+  <div class="modal-content">
+    <span id="closeUsterkaModalBtn" class="close-button">&times;</span>
+    <h2>Edytuj Zgłoszenie Usterki</h2>
+
+    <form id="usterkaEditForm" method="POST">
+      <input type="hidden" id="usterkaEditId" name="usterkaId">
+
+      <label>Opis usterki:</label><br>
+      <textarea id="usterkaEditOpis" required style="width:100%; height: 80px;"></textarea><br><br>
+
+      <label>Status:</label><br>
+      <select id="usterkaEditStatus" name="statusUsterki" style="width:100%; padding: 8px;">
+        <option value="zgloszona">Zgłoszona</option>
+        <option value="w_naprawie">W naprawie</option>
+        <option value="naprawiona">Naprawiona</option>
+      </select><br><br>
+
+      <button type="submit">Zapisz zmiany</button>
+      <p id="komunikatEdycjiUsterki" style="margin-top: 15px;"></p>
+    </form>
+
+  </div> </div>
   <script src="script.js"></script>
 </body>
 </html>
