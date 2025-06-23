@@ -8,11 +8,11 @@ Pokoj::Pokoj(int nr, int typ, int pl, int cap, int statIndex)
 
 bool Pokoj::dodajStudenta(int id_studenta) {
     if (studenci.size() >= capacity) {
-        std::cout << "Nie mozna dodac studenta" << id_studenta << " do pokoju nr " << nr_pokoju << ": pelen pokoj.\n";
+        //std::cout << "Nie mozna dodac studenta" << id_studenta << " do pokoju nr " << nr_pokoju << ": pelen pokoj.\n";
         return false;
     }
     studenci.push_back(id_studenta);
-    std::cout << "Dodano studenta " << id_studenta << " do pokoju " << nr_pokoju << "\n";
+    //std::cout << "Dodano studenta " << id_studenta << " do pokoju " << nr_pokoju << "\n";
     return true;
 }
 
@@ -29,11 +29,11 @@ bool Pokoj::usunStudenta(int id_studenta) {
 
 bool Pokoj::zmienStatus(int statusIndex) {
     if (statusIndex >= 0 && statusIndex <= 4) {
-        Status oldStatus = status;
+       // Status oldStatus = status;
         status = static_cast<Status>(statusIndex);
-        std::cout << "Pokoj " << nr_pokoju << " zmienil status z " << oldStatus << " do " << status << "\n";
+        //std::cout << "Pokoj " << nr_pokoju << " zmienil status z " << oldStatus << " do " << status << "\n";
         return true;
     }
-    std::cout << "Blad - niepoprawny status\n";
+    //std::cout << "Blad - niepoprawny status\n";
     return false;
 }
