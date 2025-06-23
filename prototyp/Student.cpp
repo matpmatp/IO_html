@@ -6,9 +6,9 @@ Student::Student(std::string i, std::string n, int id, std::string u, int pok)
 
 void Student::wybierzWyposazenie(std::vector<Wyposazenie> wybor) {
     mojeWyposazenie = wybor;
-    std::cout << "Student " << imie << " wybral z wyposazenia: ";
+    /*std::cout << "Student " << imie << " wybral z wyposazenia: ";
     for (auto& w : mojeWyposazenie) std::cout << w << " ";
-    std::cout << "\n";
+    std::cout << "\n";*/
 }
 
 void Student::zglosUsterke(std::string opis, std::string filepath) {
@@ -16,7 +16,8 @@ void Student::zglosUsterke(std::string opis, std::string filepath) {
 }
 
 bool Student::zaplac(int id_studenta, int kwota, std::string opis) {
-    std::cout << "Student " << id_studenta << " oplacil kwote " << kwota << " za: " << opis << "\n";
+    //std::cout << "Student " << id_studenta << " oplacil kwote " << kwota << " za: " << opis << "\n";
+    if (kwota <= 0) return false;
     return true;
 }
 
